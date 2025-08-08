@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from fastapi import HTTPException
@@ -26,7 +26,7 @@ def create_engine_with_retry():
             engine = create_engine(DATABASE_URL, echo=True)
             
             with engine.connect() as conn:
-                result = conn.execute("SELECT 1")
+                result = conn.execute(text("SELECT 1"))
                 print(f"Database connection successful on attempt {attempt + 1}")
                 return engine
                 

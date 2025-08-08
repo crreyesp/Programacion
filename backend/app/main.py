@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from typing import List
 import os
 from datetime import datetime
@@ -54,7 +55,7 @@ async def health_check():
     try:
         if engine:
             with engine.connect() as conn:
-                conn.execute("SELECT 1")
+                conn.execute(text("SELECT 1"))
                 db_status = "connected"
                 database_available = True
     except Exception as e:
