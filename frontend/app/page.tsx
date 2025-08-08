@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { School, Users, BookOpen, Calendar, BarChart3, Settings } from 'lucide-react'
 
 export default function Home() {
@@ -105,10 +106,20 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {modules.map((module, index) => {
             const IconComponent = module.icon
+            const moduleRoutes = {
+              'Gestión de Estudiantes': '/estudiantes',
+              'Gestión Académica': '/academica',
+              'Calendario Escolar': '/calendario',
+              'Reportes y Analytics': '/reportes',
+              'PIE - Programa de Integración': '/pie',
+              'Configuración': '/configuracion'
+            }
+            
             return (
-              <div
+              <Link
                 key={index}
-                className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                href={moduleRoutes[module.name as keyof typeof moduleRoutes] || '#'}
+                className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer block"
               >
                 <div className={`${module.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
                   <IconComponent className="h-6 w-6 text-white" />
@@ -119,7 +130,7 @@ export default function Home() {
                 <p className="text-gray-600">
                   {module.description}
                 </p>
-              </div>
+              </Link>
             )
           })}
         </div>
