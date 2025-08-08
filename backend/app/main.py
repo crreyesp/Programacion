@@ -6,9 +6,11 @@ from typing import List
 import os
 from datetime import datetime
 
-from .database import get_db
-from .models import Organization, School, License, Contract
+from .database import engine, get_db
+from .models import Base, Organization, School, License, Contract
 from .schemas import OrganizationCreate, OrganizationResponse, SchoolCreate, SchoolResponse, LicenseCreate, LicenseResponse
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="SIGECOL v4.16 API",
@@ -18,7 +20,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://37.27.198.175:3000", "http://localhost:3000", "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

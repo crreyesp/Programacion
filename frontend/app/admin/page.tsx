@@ -54,7 +54,7 @@ export default function AdminPage() {
     timezone: 'America/Santiago'
   })
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://37.27.198.175:8000'
 
   useEffect(() => {
     fetchData()
