@@ -9,7 +9,7 @@ export default function Home() {
 
   useEffect(() => {
     const checkApiConnection = async () => {
-      const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const url = process.env.NEXT_PUBLIC_API_URL || 'http://37.27.198.175:8000'
       setApiUrl(url)
       
       try {
