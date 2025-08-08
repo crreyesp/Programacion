@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { School, Users, BookOpen, Calendar, BarChart3, Settings } from 'lucide-react'
+import { School, Users, BookOpen, Calendar, BarChart3, Settings, Building2 } from 'lucide-react'
 
 export default function Home() {
   const [apiStatus, setApiStatus] = useState<'loading' | 'connected' | 'error'>('loading')
@@ -46,6 +46,12 @@ export default function Home() {
       description: 'Eventos, horarios y actividades institucionales',
       icon: Calendar,
       color: 'bg-purple-500'
+    },
+    {
+      name: 'Administración Central',
+      description: 'Gestión de organizaciones y licencias',
+      icon: Building2,
+      color: 'bg-indigo-500'
     },
     {
       name: 'Reportes y Analytics',
@@ -110,6 +116,7 @@ export default function Home() {
               'Gestión de Estudiantes': '/estudiantes',
               'Gestión Académica': '/academica',
               'Calendario Escolar': '/calendario',
+              'Administración Central': '/admin',
               'Reportes y Analytics': '/reportes',
               'PIE - Programa de Integración': '/pie',
               'Configuración': '/configuracion'
