@@ -10,7 +10,11 @@ from .database import engine, get_db
 from .models import Base, Organization, School, License, Contract
 from .schemas import OrganizationCreate, OrganizationResponse, SchoolCreate, SchoolResponse, LicenseCreate, LicenseResponse
 
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"Warning: Could not create database tables: {e}")
+    print("Database tables will be created when database connection is available")
 
 app = FastAPI(
     title="SIGECOL v4.16 API",
