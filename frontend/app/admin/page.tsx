@@ -36,6 +36,10 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [showCreateOrg, setShowCreateOrg] = useState(false)
   const [showCreateSchool, setShowCreateSchool] = useState(false)
+  const [showEditOrg, setShowEditOrg] = useState(false)
+  const [showEditSchool, setShowEditSchool] = useState(false)
+  const [editingOrgId, setEditingOrgId] = useState<number | null>(null)
+  const [editingSchoolId, setEditingSchoolId] = useState<number | null>(null)
   const [newOrg, setNewOrg] = useState({
     name: '',
     legal_name: '',
@@ -45,6 +49,23 @@ export default function AdminPage() {
     address: ''
   })
   const [newSchool, setNewSchool] = useState({
+    organization_id: 0,
+    name: '',
+    rbd: '',
+    address: '',
+    phone: '',
+    email: '',
+    timezone: 'America/Santiago'
+  })
+  const [editOrg, setEditOrg] = useState({
+    name: '',
+    legal_name: '',
+    rut: '',
+    email: '',
+    phone: '',
+    address: ''
+  })
+  const [editSchool, setEditSchool] = useState({
     organization_id: 0,
     name: '',
     rbd: '',
@@ -122,6 +143,73 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error('Error creating school:', error)
+    }
+  }
+
+  const startEditOrg = (org: Organization) => {
+    setEditOrg({
+      name: org.name,
+      legal_name: org.legal_name,
+      rut: org.rut,
+      email: org.email,
+      phone: org.phone || '',
+      address: org.address || ''
+    })
+    setEditingOrgId(org.id)
+    setShowEditOrg(true)
+  }
+
+  const updateOrganization = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingOrgId) return
+    
+    try {
+      const response = await fetch(`${apiUrl}/admin/organizations/${editingOrgId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editOrg)
+      })
+      if (response.ok) {
+        setShowEditOrg(false)
+        setEditingOrgId(null)
+        fetchData()
+      }
+    } catch (error) {
+      console.error('Error updating organization:', error)
+    }
+  }
+
+  const startEditSchool = (school: School) => {
+    setEditSchool({
+      organization_id: school.organization_id,
+      name: school.name,
+      rbd: school.rbd || '',
+      address: school.address || '',
+      phone: school.phone || '',
+      email: school.email || '',
+      timezone: school.timezone || 'America/Santiago'
+    })
+    setEditingSchoolId(school.id)
+    setShowEditSchool(true)
+  }
+
+  const updateSchool = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingSchoolId) return
+    
+    try {
+      const response = await fetch(`${apiUrl}/admin/schools/${editingSchoolId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editSchool)
+      })
+      if (response.ok) {
+        setShowEditSchool(false)
+        setEditingSchoolId(null)
+        fetchData()
+      }
+    } catch (error) {
+      console.error('Error updating school:', error)
     }
   }
 
@@ -203,6 +291,9 @@ export default function AdminPage() {
                     <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase">
                       Estado
                     </th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase">
+                      Acciones
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -227,6 +318,14 @@ export default function AdminPage() {
                         }`}>
                           {org.is_active ? 'Activo' : 'Inactivo'}
                         </span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <button
+                          onClick={() => startEditOrg(org)}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                          Editar
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -258,6 +357,9 @@ export default function AdminPage() {
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase">
                     Estado
                   </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -277,6 +379,14 @@ export default function AdminPage() {
                         }`}>
                           {school.is_active ? 'Activo' : 'Inactivo'}
                         </span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <button
+                          onClick={() => startEditSchool(school)}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                          Editar
+                        </button>
                       </td>
                     </tr>
                   )
@@ -426,6 +536,153 @@ export default function AdminPage() {
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                   >
                     Crear
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showEditOrg && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-lg font-semibold mb-4">Editar Organización</h3>
+              <form onSubmit={updateOrganization}>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    placeholder="Nombre comercial"
+                    value={editOrg.name}
+                    onChange={(e) => setEditOrg({...editOrg, name: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Razón social"
+                    value={editOrg.legal_name}
+                    onChange={(e) => setEditOrg({...editOrg, legal_name: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="RUT (ej: 12345678-9)"
+                    value={editOrg.rut}
+                    onChange={(e) => setEditOrg({...editOrg, rut: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    required
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={editOrg.email}
+                    onChange={(e) => setEditOrg({...editOrg, email: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Teléfono (opcional)"
+                    value={editOrg.phone}
+                    onChange={(e) => setEditOrg({...editOrg, phone: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                  />
+                  <textarea
+                    placeholder="Dirección (opcional)"
+                    value={editOrg.address}
+                    onChange={(e) => setEditOrg({...editOrg, address: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    rows={3}
+                  />
+                </div>
+                <div className="flex justify-end space-x-2 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditOrg(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                  >
+                    Actualizar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showEditSchool && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-lg font-semibold mb-4">Editar Colegio</h3>
+              <form onSubmit={updateSchool}>
+                <div className="space-y-4">
+                  <select
+                    value={editSchool.organization_id}
+                    onChange={(e) => setEditSchool({...editSchool, organization_id: parseInt(e.target.value)})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    required
+                  >
+                    <option value={0}>Seleccionar organización</option>
+                    {organizations.map((org) => (
+                      <option key={org.id} value={org.id}>{org.name}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Nombre del colegio"
+                    value={editSchool.name}
+                    onChange={(e) => setEditSchool({...editSchool, name: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="RBD (opcional)"
+                    value={editSchool.rbd}
+                    onChange={(e) => setEditSchool({...editSchool, rbd: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email (opcional)"
+                    value={editSchool.email}
+                    onChange={(e) => setEditSchool({...editSchool, email: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Teléfono (opcional)"
+                    value={editSchool.phone}
+                    onChange={(e) => setEditSchool({...editSchool, phone: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                  />
+                  <textarea
+                    placeholder="Dirección (opcional)"
+                    value={editSchool.address}
+                    onChange={(e) => setEditSchool({...editSchool, address: e.target.value})}
+                    className="w-full p-2 border rounded text-gray-900"
+                    rows={3}
+                  />
+                </div>
+                <div className="flex justify-end space-x-2 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditSchool(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Actualizar
                   </button>
                 </div>
               </form>

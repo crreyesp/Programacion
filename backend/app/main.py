@@ -105,6 +105,19 @@ async def get_organization(org_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Organization not found")
     return org
 
+@app.put("/admin/organizations/{org_id}", response_model=OrganizationResponse)
+async def update_organization(org_id: int, org_update: OrganizationCreate, db: Session = Depends(get_db)):
+    db_org = db.query(Organization).filter(Organization.id == org_id).first()
+    if not db_org:
+        raise HTTPException(status_code=404, detail="Organization not found")
+    
+    for field, value in org_update.dict().items():
+        setattr(db_org, field, value)
+    
+    db.commit()
+    db.refresh(db_org)
+    return db_org
+
 @app.post("/admin/schools", response_model=SchoolResponse)
 async def create_school(school: SchoolCreate, db: Session = Depends(get_db)):
     org = db.query(Organization).filter(Organization.id == school.organization_id).first()
@@ -130,6 +143,23 @@ async def get_school(school_id: int, db: Session = Depends(get_db)):
     if not school:
         raise HTTPException(status_code=404, detail="School not found")
     return school
+
+@app.put("/admin/schools/{school_id}", response_model=SchoolResponse)
+async def update_school(school_id: int, school_update: SchoolCreate, db: Session = Depends(get_db)):
+    db_school = db.query(School).filter(School.id == school_id).first()
+    if not db_school:
+        raise HTTPException(status_code=404, detail="School not found")
+    
+    org = db.query(Organization).filter(Organization.id == school_update.organization_id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Organization not found")
+    
+    for field, value in school_update.dict().items():
+        setattr(db_school, field, value)
+    
+    db.commit()
+    db.refresh(db_school)
+    return db_school
 
 @app.post("/admin/licenses", response_model=LicenseResponse)
 async def create_license(license: LicenseCreate, db: Session = Depends(get_db)):
