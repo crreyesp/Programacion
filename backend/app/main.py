@@ -10,10 +10,17 @@ from .database import engine, get_db
 from .models import Base, Organization, School, License, Contract
 from .schemas import OrganizationCreate, OrganizationResponse, SchoolCreate, SchoolResponse, LicenseCreate, LicenseResponse
 
+database_available = False
+
 try:
-    Base.metadata.create_all(bind=engine)
+    if engine:
+        Base.metadata.create_all(bind=engine)
+        database_available = True
+        print("✅ Database tables created successfully")
+    else:
+        print("⚠️ Database engine not available - tables not created")
 except Exception as e:
-    print(f"Warning: Could not create database tables: {e}")
+    print(f"⚠️ Warning: Could not create database tables: {e}")
     print("Database tables will be created when database connection is available")
 
 app = FastAPI(
@@ -41,10 +48,26 @@ async def root():
 
 @app.get("/health")
 async def health_check():
+    global database_available
+    
+    db_status = "disconnected"
+    try:
+        if engine:
+            with engine.connect() as conn:
+                conn.execute("SELECT 1")
+                db_status = "connected"
+                database_available = True
+    except Exception as e:
+        print(f"Health check database test failed: {e}")
+        database_available = False
+    
+    status = "healthy" if database_available else "degraded"
+    
     return {
-        "status": "healthy",
+        "status": status,
         "service": "SIGECOL Backend",
         "version": "4.16.0",
+        "database": db_status,
         "timestamp": datetime.now().isoformat()
     }
 

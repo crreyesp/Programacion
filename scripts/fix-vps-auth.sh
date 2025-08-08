@@ -9,13 +9,23 @@ git pull origin devin/1754626550-vps-setup
 
 cp .env.vps .env
 
+echo "📋 Environment variables:"
+grep -E "DB_PASSWORD|DATABASE_URL" .env || echo "No DB variables found"
+
 docker-compose down
 
 docker-compose rm -f postgres backend
 
 docker-compose up -d
 
-sleep 10
+echo "⏳ Waiting for services to start..."
+sleep 15
+
+echo "📊 Container status:"
+docker-compose ps
+
+echo "📝 Backend logs:"
+docker-compose logs backend --tail=10
 
 echo "✅ VPS authentication fix completed!"
 echo "🔍 Checking backend health..."
