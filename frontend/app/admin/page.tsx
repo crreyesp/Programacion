@@ -297,7 +297,7 @@ export default function AdminPage() {
                     placeholder="Nombre comercial"
                     value={newOrg.name}
                     onChange={(e) => setNewOrg({...newOrg, name: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     required
                   />
                   <input
@@ -305,7 +305,7 @@ export default function AdminPage() {
                     placeholder="Razón social"
                     value={newOrg.legal_name}
                     onChange={(e) => setNewOrg({...newOrg, legal_name: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     required
                   />
                   <input
@@ -313,7 +313,7 @@ export default function AdminPage() {
                     placeholder="RUT (ej: 12345678-9)"
                     value={newOrg.rut}
                     onChange={(e) => setNewOrg({...newOrg, rut: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     required
                   />
                   <input
@@ -321,7 +321,7 @@ export default function AdminPage() {
                     placeholder="Email"
                     value={newOrg.email}
                     onChange={(e) => setNewOrg({...newOrg, email: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     required
                   />
                   <input
@@ -329,13 +329,13 @@ export default function AdminPage() {
                     placeholder="Teléfono (opcional)"
                     value={newOrg.phone}
                     onChange={(e) => setNewOrg({...newOrg, phone: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                   />
                   <textarea
                     placeholder="Dirección (opcional)"
                     value={newOrg.address}
                     onChange={(e) => setNewOrg({...newOrg, address: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     rows={3}
                   />
                 </div>
@@ -368,7 +368,7 @@ export default function AdminPage() {
                   <select
                     value={newSchool.organization_id}
                     onChange={(e) => setNewSchool({...newSchool, organization_id: parseInt(e.target.value)})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     required
                   >
                     <option value={0}>Seleccionar organización</option>
@@ -381,7 +381,7 @@ export default function AdminPage() {
                     placeholder="Nombre del colegio"
                     value={newSchool.name}
                     onChange={(e) => setNewSchool({...newSchool, name: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     required
                   />
                   <input
@@ -389,27 +389,27 @@ export default function AdminPage() {
                     placeholder="RBD (opcional)"
                     value={newSchool.rbd}
                     onChange={(e) => setNewSchool({...newSchool, rbd: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                   />
                   <input
                     type="email"
                     placeholder="Email (opcional)"
                     value={newSchool.email}
                     onChange={(e) => setNewSchool({...newSchool, email: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                   />
                   <input
                     type="text"
                     placeholder="Teléfono (opcional)"
                     value={newSchool.phone}
                     onChange={(e) => setNewSchool({...newSchool, phone: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                   />
                   <textarea
                     placeholder="Dirección (opcional)"
                     value={newSchool.address}
                     onChange={(e) => setNewSchool({...newSchool, address: e.target.value})}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-gray-900"
                     rows={3}
                   />
                 </div>
