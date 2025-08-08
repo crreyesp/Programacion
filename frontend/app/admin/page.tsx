@@ -10,6 +10,8 @@ interface Organization {
   legal_name: string
   rut: string
   email: string
+  phone?: string
+  address?: string
   created_at: string
   is_active: boolean
 }
@@ -18,7 +20,11 @@ interface School {
   id: number
   organization_id: number
   name: string
-  rbd: string
+  rbd?: string
+  address?: string
+  phone?: string
+  email?: string
+  timezone?: string
   created_at: string
   is_active: boolean
 }
